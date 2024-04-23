@@ -1,0 +1,38 @@
+﻿@page "/"
+@inject IJSRuntime JS
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?"/>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="test">test</MudButton>
+
+<code> @text</code>
+<script>
+  window.convertArray = (win1251Array) => {
+    return JSON.stringify(tmbus(win1251Array,null, "\t"));
+  };
+</script>
+
+
+@code{
+    
+  private string text;
+  string input = "68 4D 4D 68 08 01 72 01 00 00 00 96 15 01 00 18 00 00 00 0C 78 56 00 00 00 01 FD 1B 00 02 FC 03 48 52 25 74 44 0D 22 FC 03 48 52 25 74 F1 0C 12 FC 03 48 52 25 74 63 11 02 65 B4 09 22 65 86 09 12 65 B7 09 01 72 00 72 65 00 00 B2 01 65 00 00 1F B3 16";
+
+
+
+  private async void test()
+  {
+    text = new(await JS.InvokeAsync<string>("convertArray", input));
+
+    var a = JObject.Parse(text);
+    JToken jt = JToken.Parse(text);
+    text=jt.ToString(Newtonsoft.Json.Formatting.Indented);
+    Console.WriteLine(text);
+    StateHasChanged();
+  }
+}
